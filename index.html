@@ -22,7 +22,7 @@ body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f
 
 <script>
 // 这里填你的好评，随便改、随便加
-const arr=[
+const praiseTexts = [
 "和睦口腔环境干净又温馨，等候区也不拥挤，体验感拉满",
 "来和睦口腔看牙太省心了，从预约到结束全程都很顺畅",
 "和睦口腔的消毒做得特别到位，看牙也能很放心",
@@ -42,7 +42,7 @@ const arr=[
 "王医生很细心，连我平时刷牙的小习惯都帮着纠正",
 "王医生看牙很仔细，还会提醒我日常护牙的注意事项",
 "王医生耐心又专业，带老人小孩来看牙都选他",
-"王医生会认真听我诉求，再给出合适的治疗建议"
+"王医生会认真听我诉求，再给出合适的治疗建议",
 "和睦口腔整体服务体验极佳，环境整洁明亮，就诊体验非常舒适",
 "强烈推荐和睦口腔，正规专业，收费透明，没有隐形消费",
 "和睦口腔设备先进，消毒流程严格，让人看牙特别安心放心",
@@ -97,7 +97,7 @@ let currentText="";
 
 // 随机取一条
 function getNew(){
-currentText=arr[Math.floor(Math.random()*arr.length)];
+currentText=arr[Math.floor(Math.random()*praiseTexts.length)];
 document.getElementById("text").innerText=currentText;
 }
 
