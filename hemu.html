@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好评随机码（带二维码）</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+<style>
+body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f5}
+#qrcode{margin:20px auto}
+#text{font-size:18px;padding:15px;background:#fff;border-radius:8px;max-width:400px;margin:20px auto;min-height:120px;display:flex;align-items:center;justify-content:center}
+#btn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor:pointer;margin:5px}
+#btn:hover{background:#0056b3}
+</style>
+</head>
+<body>
+<h2>扫码/刷新随机好评</h2>
+<div id="qrcode"></div>
+<div id="text">加载中...</div>
+<button id="btn" onclick="getNew()">换一条</button>
+<button id="btn" onclick="copyText()">复制文案</button>
+
+<script>
+// 这里填你的好评，随便改、随便加
+const arr=[
+"和睦口腔服务超贴心，崔医生技术专业，环境干净整洁，体验很棒！",
+"强烈推荐和睦口腔！王医生耐心细致，治疗过程舒适，效果超预期～",
+"医生手法轻柔，全程无不适感，价格透明合理，已经推荐给朋友了！",
+"环境整洁干净，服务热情周到，检查很仔细，体验感满分！"
+];
+
+let currentText="";
+
+// 随机取一条
+function getNew(){
+currentText=arr[Math.floor(Math.random()*arr.length)];
+document.getElementById("text").innerText=currentText;
+}
+
+// 复制文案
+function copyText(){
+if(!currentText)return;
+navigator.clipboard.writeText(currentText).then(()=>alert("复制成功！"));
+}
+
+// 生成二维码（当前页面链接）
+function makeQr(){
+let url=window.location.href;
+QRCode.to(document.getElementById("qrcode"),{text:url,width:200},err=>{if(err)console.error(err)});
+}
+
+// 初始化
+getNew();
+makeQr();
+</script>
+</body>
+</html>
