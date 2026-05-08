@@ -97,7 +97,7 @@ let currentText="";
 
 // 随机取一条
 function getNew(){
-currentText=arr[Math.floor(Math.random()*praiseTexts.length)];
+currentText=praiseTexts[Math.floor(Math.random()*praiseTexts.length)];
 document.getElementById("text").innerText=currentText;
 }
 
@@ -119,3 +119,4 @@ makeQr();
 </script>
 </body>
 </html>
+
