@@ -8,19 +8,20 @@
 <style>
 body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f5}
 #qrcode{margin:20px auto}
-#text{font-size:18px;padding:15px;background:#fff;border-radius:8px;max-width:400px;margin:20px auto;min-height:120px;display:flex;align-items:center;justify-content:center}
-#btn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor:pointer;margin:5px}
-#btn:hover{background:#0056b3}
+#textBox{font-size:18px;padding:15px;background:#fff;border-radius:8px;max-width:400px;margin:20px auto;min-height:120px;display:flex;align-items:center;justify-content:center}
+#copyBtn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor-pointer:margin:5px}
+#copyBtn:hover{background:#0056b3}
 </style>
 </head>
 <body>
 <h2>和睦口腔厦门路店</h2>
+<div id="textBox"></div>
+<button id="copyBtn">一键复制文案</button>
 <div id="qrcode"></div>
-<div id="text">加载中...</div>
-<button id="btn" onclick="copyText()">复制文案</button>
 
 <script>
-const praiseTexts = [
+// ================= 你的文案 =================
+const textList = [
 "和睦口腔环境干净又温馨，等候区也不拥挤，体验感拉满",
 "来和睦口腔看牙太省心了，从预约到结束全程都很顺畅",
 "和睦口腔的消毒做得特别到位，看牙也能很放心",
@@ -425,38 +426,49 @@ const praiseTexts = [
 "擅长处理各类复杂牙齿问题，经验丰富不慌乱，手法稳准轻柔，尽量降低疼痛感，环境干净规范，讲解细致，还会贴心发送注意事项。"
 ];
 
-let currentText = "";
-
-// 每次打开自动顺序+1，不重复
-function getNew() {
-    let index = localStorage.getItem("commentIndex") || 0;
-    index = parseInt(index);
-
-    if (index >= praiseTexts.length) index = 0;
-
-    currentText = praiseTexts[index];
-    document.getElementById("text").innerText = currentText;
-
-    localStorage.setItem("commentIndex", index + 1);
+// ================= 全局顺序计数器（稳定不报错） =================
+async function getGlobalIndex() {
+  try {
+    let r = await fetch("https://api.countapi.xyz/get/bestkoalana/hemu");
+    let d = await r.json();
+    return d.value || 0;
+  } catch(e) { return 0; }
 }
 
-// 复制文案
-function copyText() {
-    if (!currentText) return;
-    navigator.clipboard.writeText(currentText).then(() => alert("复制成功！"));
+async function addGlobalIndex() {
+  try {
+    await fetch("https://api.countapi.xyz/hit/bestkoalana/hemu");
+  } catch(e) {}
 }
 
-// 生成二维码
-function makeQr() {
-    let url = window.location.href;
-    QRCode.to(document.getElementById("qrcode"), { text: url, width: 200 }, err => {
-        if (err) console.error(err);
-    });
+// ================= 显示文案 =================
+async function show() {
+  let idx = await getGlobalIndex();
+  let realIdx = idx % textList.length;
+  document.getElementById("textBox").innerText = textList[realIdx];
+  await addGlobalIndex();
 }
 
-// 初始化
-getNew();
-makeQr();
+// ================= 复制功能 =================
+document.getElementById("copyBtn").onclick = function(){
+  let t = document.getElementById("textBox").innerText;
+  let i = document.createElement("input");
+  i.value = t;
+  document.body.appendChild(i);
+  i.select();
+  document.execCommand("copy");
+  document.body.removeChild(i);
+  alert("复制成功！");
+}
+
+// ================= 启动页面 =================
+window.onload = function(){
+  show();
+  // 生成当前页面二维码
+  QRCode.toCanvas(document.getElementById("qrcode"), window.location.href, {
+    width:120, margin:1
+  });
+}
 </script>
 </body>
 </html>
