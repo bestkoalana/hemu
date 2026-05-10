@@ -7,10 +7,8 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
 <style>
 body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f5}
-#qrcode{margin:20px auto}
 #textBox{font-size:18px;padding:15px;background:#fff;border-radius:8px;max-width:400px;margin:20px auto;min-height:120px;display:flex;align-items:center;justify-content:center}
-#copyBtn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor:pointer;margin:5px}
-#copyBtn:hover{background:#0056b3}
+#copyBtn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -20,7 +18,7 @@ body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f
 <div id="qrcode"></div>
 
 <script>
-// ================= 在这里粘贴你的文案 =================
+// ============== 在这里贴你的文案 ==============
 const textList = [
 "和睦口腔环境干净又温馨，等候区也不拥挤，体验感拉满",
 "来和睦口腔看牙太省心了，从预约到结束全程都很顺畅",
@@ -425,45 +423,33 @@ const textList = [
 "支持多种预约方式，适配上班族、宝妈、老人不同需求，特别人性化，医生技术过硬，舒适化治疗不疼，店内干净收费透明停车便利。",
 "擅长处理各类复杂牙齿问题，经验丰富不慌乱，手法稳准轻柔，尽量降低疼痛感，环境干净规范，讲解细致，还会贴心发送注意事项。"
 ];
-// ======================================================
+// ==============================================
 
-async function getGlobalIndex() {
-  try {
-    let r = await fetch("https://api.countapi.xyz/get/bestkoalana/hemu");
-    let d = await r.json();
-    return d.value || 0;
-  } catch(e) { return 0; }
-}
-async function addGlobalIndex() {
-  try {
-    await fetch("https://api.countapi.xyz/hit/bestkoalana/hemu");
-  } catch(e) {}
-}
+// 一打开页面 立刻显示文案，绝不空白
+document.getElementById("textBox").innerText = textList[0];
 
-async function show() {
-  let idx = await getGlobalIndex();
-  let realIdx = idx % textList.length;
-  document.getElementById("textBox").innerText = textList[realIdx];
-  await addGlobalIndex();
-}
+// 全局顺序+1 后台执行，不影响显示
+fetch("https://api.countapi.xyz/hit/hemu_ok/seq").then(res => res.json()).then(data => {
+  let idx = (data.value - 1) % textList.length;
+  document.getElementById("textBox").innerText = textList[idx];
+});
 
+// 复制功能
 document.getElementById("copyBtn").onclick = function(){
-  let t = document.getElementById("textBox").innerText;
-  let i = document.createElement("input");
-  i.value = t;
-  document.body.appendChild(i);
-  i.select();
+  let content = document.getElementById("textBox").innerText;
+  let input = document.createElement("input");
+  input.value = content;
+  document.body.appendChild(input);
+  input.select();
   document.execCommand("copy");
-  document.body.removeChild(i);
+  document.body.removeChild(input);
   alert("复制成功！");
-}
+};
 
+// 二维码
 window.onload = function(){
-  show();
-  QRCode.toCanvas(document.getElementById("qrcode"), window.location.href, {
-    width:120, margin:1
-  });
-}
+  QRCode.toCanvas(document.getElementById("qrcode"), window.location.href, { width:130 });
+};
 </script>
 </body>
 </html>
