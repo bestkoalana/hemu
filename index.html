@@ -9,7 +9,7 @@
 body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f5}
 #qrcode{margin:20px auto}
 #textBox{font-size:18px;padding:15px;background:#fff;border-radius:8px;max-width:400px;margin:20px auto;min-height:120px;display:flex;align-items:center;justify-content:center}
-#copyBtn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor-pointer:margin:5px}
+#copyBtn{padding:10px 20px;font-size:16px;background:#007bff;color:#fff;border:none;border-radius:5px;cursor:pointer;margin:5px}
 #copyBtn:hover{background:#0056b3}
 </style>
 </head>
@@ -20,7 +20,7 @@ body{font-family:"微软雅黑";text-align:center;padding:20px;background:#f5f5f
 <div id="qrcode"></div>
 
 <script>
-// ================= 你的文案 =================
+// ================= 在这里粘贴你的文案 =================
 const textList = [
 "和睦口腔环境干净又温馨，等候区也不拥挤，体验感拉满",
 "来和睦口腔看牙太省心了，从预约到结束全程都很顺畅",
@@ -425,8 +425,8 @@ const textList = [
 "支持多种预约方式，适配上班族、宝妈、老人不同需求，特别人性化，医生技术过硬，舒适化治疗不疼，店内干净收费透明停车便利。",
 "擅长处理各类复杂牙齿问题，经验丰富不慌乱，手法稳准轻柔，尽量降低疼痛感，环境干净规范，讲解细致，还会贴心发送注意事项。"
 ];
+// ======================================================
 
-// ================= 全局顺序计数器（稳定不报错） =================
 async function getGlobalIndex() {
   try {
     let r = await fetch("https://api.countapi.xyz/get/bestkoalana/hemu");
@@ -434,14 +434,12 @@ async function getGlobalIndex() {
     return d.value || 0;
   } catch(e) { return 0; }
 }
-
 async function addGlobalIndex() {
   try {
     await fetch("https://api.countapi.xyz/hit/bestkoalana/hemu");
   } catch(e) {}
 }
 
-// ================= 显示文案 =================
 async function show() {
   let idx = await getGlobalIndex();
   let realIdx = idx % textList.length;
@@ -449,7 +447,6 @@ async function show() {
   await addGlobalIndex();
 }
 
-// ================= 复制功能 =================
 document.getElementById("copyBtn").onclick = function(){
   let t = document.getElementById("textBox").innerText;
   let i = document.createElement("input");
@@ -461,10 +458,8 @@ document.getElementById("copyBtn").onclick = function(){
   alert("复制成功！");
 }
 
-// ================= 启动页面 =================
 window.onload = function(){
   show();
-  // 生成当前页面二维码
   QRCode.toCanvas(document.getElementById("qrcode"), window.location.href, {
     width:120, margin:1
   });
